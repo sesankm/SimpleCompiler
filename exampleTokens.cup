@@ -1,0 +1,298 @@
+import java_cup.runtime.*;
+
+terminal READ;
+terminal PRINT;
+terminal PRINTLN;
+terminal VOID;
+terminal CLASS;
+terminal WHILE;
+terminal RETURN;
+terminal FINAL;
+terminal ASSMNT;
+terminal SEMI;
+terminal LPAR;
+terminal RPAR;
+terminal LBRAC;
+terminal RBRAC;
+terminal LBOX;
+terminal RBOX;
+terminal COMMA;
+terminal TILDE;
+terminal COLON;
+terminal QUESTION;
+terminal PIPE;
+terminal BS;
+terminal INC;
+terminal DEC;
+
+// BinOps
+terminal String DIVIDE;
+terminal String LT;
+terminal String GT;
+terminal String EQ;
+terminal String LTE;
+terminal String GTE;
+terminal String NE;
+terminal String OR;
+terminal String AND;
+terminal String PLUS;
+terminal String TIMES;
+terminal String MINUS;
+
+// Constants
+terminal int TRUE;
+terminal int FALSE;
+
+// Literals
+terminal int INTLIT;
+terminal String STRINGLIT;
+terminal char CHARLIT;
+terminal float FLOATING;
+
+// Types
+terminal String INT;
+terminal String STRING;
+terminal String CHAR;
+terminal String FLOAT;
+terminal String BOOL;
+
+terminal VAR;
+terminal String ID;
+
+terminal IF;
+terminal ELSE;
+
+
+non terminal Name;
+non terminal Args;
+non terminal Expr;
+non terminal Type;
+non terminal Stmt;
+non terminal Stmts;
+non terminal OptionalElse;
+non terminal ReadList;
+non terminal PrintList;
+non terminal PrintLineList;
+non terminal Fielddecl;
+non terminal Fielddecls;
+non terminal BinOp;
+non terminal Optionalsemi;
+non terminal Optionalfinal;
+non terminal Optionalexpr;
+non terminal Program;
+non terminal Returntype;
+non terminal Argdecl;
+non terminal Argdecls;
+non terminal Argdecllist;
+non terminal Methoddecl;
+non terminal Methoddecls;
+non terminal Memberdecls;
+
+precedence left  PLUS, MINUS;
+precedence left  TIMES, DIVIDE;
+precedence left  ELSE;
+
+
+Name ::= ID:id
+{: RESULT = new Name(id); :}
+| ID:id LBRAC Expr:e RBRAC
+{: RESULT = new Name(id, e); :};
+
+BinOp ::= MINUS:b
+{: RESULT = new BinOp(b); :}
+| PLUS:b
+{: RESULT = new BinOp(b); :}
+| LT:b
+{: RESULT = new BinOp(b); :}
+| GT:b
+{: RESULT = new BinOp(b); :}
+| LTE:b
+{: RESULT = new BinOp(b); :}
+| GTE:b
+{: RESULT = new BinOp(b); :}
+| EQ:b
+{: RESULT = new BinOp(b); :}
+| NE:b
+{: RESULT = new BinOp(b); :}
+| OR:b
+{: RESULT = new BinOp(b); :}
+| AND:b
+{: RESULT = new BinOp(b); :}
+| TIMES:b
+{: RESULT = new BinOp(b); :}
+| DIVIDE:b
+{: RESULT = new BinOp(b); :};
+
+Type ::= CHAR:c
+{: RESULT = new Type(c); :}
+| STRING:s
+{: RESULT = new Type(s); :}
+| INT:i
+{: RESULT = new Type(i); :}
+| FLOAT:f
+{: RESULT = new Type(f); :}
+| BOOL:b
+{: RESULT = new Type(b); :}
+;
+
+Returntype ::= Type:t
+{:RESULT =  new ReturnType(t); :}
+| VOID
+{:RESULT =  new ReturnType(); :};
+
+
+Optionalsemi ::= SEMI
+{: RESULT = new Optionalsemi(1); :}
+| 
+{: RESULT = new Optionalsemi(); :};
+
+Expr ::= Name:n
+{: RESULT = new Expr(n); :}
+| ID:i LPAR RPAR
+{: RESULT = new Expr(i); :}
+| ID:i LPAR Args:a RPAR
+{: RESULT = new Expr(i, a); :}
+| CHARLIT:c
+{: RESULT = new Expr(c); :}
+| FLOATING:f
+{: RESULT = new Expr(f); :}
+| INTLIT:i
+{: RESULT = new Expr(i); :}
+| TRUE:b
+{: RESULT = new Expr(b); :}
+| FALSE:b
+{: RESULT = new Expr(b); :}
+| LPAR Expr:e RPAR
+{: RESULT = new Expr(e); :}
+| TILDE:b Expr:e
+{: RESULT = new Expr(b, e); :}
+| MINUS:b Expr:e
+{: RESULT = new Expr(b, e); :}
+| PLUS:b Expr:e
+{: RESULT = new Expr(b, e); :}
+| LPAR Type:t RPAR Expr:e
+{: RESULT = new Expr(t, e); :}
+| LPAR Expr:e1 QUESTION Expr:e2 COLON Expr:e3 RPAR
+{: RESULT = new Expr(e1, e2, e3); :};
+
+Args ::= Expr:e COMMA Args:a
+{: RESULT = new Args(e, a); :}
+| Expr:e
+{: RESULT = new Args(e); :}
+;
+
+Argdecl ::= Type:t ID:i
+{: RESULT = new Argdecl(t, i); :}
+| Type:t ID:i LBOX RBOX
+{: RESULT = new Argdecl(t, i, 1); :};
+
+Argdecllist ::= Argdecl:a COMMA Argdecllist:al
+{: RESULT = new Argdecllist(a, al); :}
+| Argdecl:a
+{: RESULT = new Argdecllist(a); :}
+;
+
+Argdecls ::= Argdecllist:a
+{: RESULT = new Argdecls(a); :}
+|
+{: RESULT = new Argdecls(); :}
+;
+
+ReadList ::= Name:n COMMA ReadList:r
+{: RESULT = new ReadList(n, r); :}
+| Name:n
+{: RESULT = new ReadList(n); :};
+
+PrintList ::= Expr:e COMMA PrintList:p
+{: RESULT = new PrintList(e, p); :}
+| Expr:e
+{: RESULT = new PrintList(e); :};
+
+PrintLineList ::= PrintList:p
+{:RESULT = new PrintLineList(p); :}
+| 
+{:RESULT = new PrintLineList(); :};
+
+
+Optionalfinal ::= FINAL
+{:RESULT = new Optionalfinal(1); :}
+| 
+{:RESULT = new Optionalfinal(); :};
+
+Optionalexpr ::= Expr:e
+{:RESULT = new Optionalexpr(e); :}
+| 
+{:RESULT = new Optionalexpr(); :};
+
+Optionalsemi ::= SEMI
+{:RESULT = new Optionalsemi(1); :}
+| 
+{:RESULT = new Optionalsemi(); :};
+
+OptionalElse ::= ELSE Stmt
+{:RESULT = new OptionalElse(1); :}
+| 
+{:RESULT = new OptionalElse(); :};
+
+Fielddecl ::= Optionalfinal:f Type:t ID:i Optionalexpr:e
+{: RESULT = new Fielddecl(f, t, i, e); :}
+| Type:t ID:i LBOX INTLIT:l RBOX
+{: RESULT = new Fielddecl(t, i, l); :};
+
+Stmt ::= IF LPAR Expr:e RPAR Stmt:s OptionalElse:oe
+{: RESULT = new Stmt(e, s, oe); :}
+| WHILE LPAR Expr:e RPAR Stmt:s
+{: RESULT = new Stmt(e, s); :}
+| Name:n EQ Expr:e
+{: RESULT = new Stmt(n, e); :}
+| READ LPAR ReadList:r RPAR
+{: RESULT = new Stmt(r, 1); :}
+| PRINT LPAR PrintList:p RPAR
+{: RESULT = new Stmt(p, 1); :}
+| PRINTLN LPAR PrintLineList:p RPAR
+{: RESULT = new Stmt(p); :}
+| ID:i LPAR RPAR
+{: RESULT = new Stmt(i); :}
+| ID:i LPAR Args:a RPAR
+{: RESULT = new Stmt(i, a); :}
+| RETURN
+{: RESULT = new Stmt(); :}
+| RETURN Expr:e
+{: RESULT = new Stmt(true, e); :}
+| Name:n INC:i
+{: RESULT = new Stmt(n, i); :}
+| Name:n DEC:d
+{: RESULT = new Stmt(n, d); :}
+| RBRAC Fielddecls:f Stmts:s LBRAC Optionalsemi:oe
+{: RESULT = new Stmt(f, s, oe, 1); :};
+
+Stmts ::= Stmt:s Stmts:ss
+{: RESULT = new Stmts(s, ss); :}
+|
+{: RESULT = new Stmts(); :};
+
+Fielddecls ::= Fielddecl:f Fielddecls:fs
+{: RESULT = new Fielddecls(f, fs); :}
+| 
+{: RESULT = new Fielddecls(); :};
+
+
+
+Methoddecl ::= Returntype:r ID:i LPAR Argdecl:a RPAR LBRAC Fielddecls:f Stmts:s RBRAC Optionalsemi:o
+{: RESULT = new Methoddecl(r, i, a, f, s, o); :};
+
+Methoddecls ::= Methoddecl:m Methoddecls:ms
+{: RESULT = new Methoddecls(m, ms); :}
+|
+{: RESULT = new Methoddecls(); :}
+;
+
+Memberdecls ::= Fielddecls:f Methoddecls:m
+{: RESULT = new Memberdecls(f, m); :}
+| 
+{: RESULT = new Memberdecls(); :};
+
+
+Program ::= CLASS ID:i LBRAC Memberdecls:m RBRAC
+{: RESULT = new Program(i, m); :}
+;

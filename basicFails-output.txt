@@ -1,0 +1,24 @@
+Illegal char, '\' line: 0, column: 0
+Illegal char, '\' line: 0, column: 0
+Token #50, with value = bad; at line 0, column 2
+Token #50, with value = floats; at line 0, column 6
+Illegal char, '.' line: 1, column: 0
+Token #40, with value = 1; at line 1, column 1
+Token #40, with value = 2; at line 2, column 0
+Illegal char, '.' line: 2, column: 0
+Illegal char, '\' line: 3, column: 0
+Illegal char, '\' line: 3, column: 0
+Token #50, with value = bad; at line 3, column 2
+Token #50, with value = chars; at line 3, column 6
+Illegal char, '_' line: 4, column: 0
+Illegal char, '$' line: 5, column: 0
+Illegal char, '.' line: 6, column: 0
+Illegal char, '^' line: 7, column: 0
+Illegal char, '#' line: 8, column: 0
+Illegal char, '\' line: 9, column: 0
+Illegal char, '\' line: 9, column: 0
+Token #50, with value = invalid; at line 9, column 2
+Token #50, with value = id; at line 9, column 10
+Token #50, with value = first; at line 10, column 0
+Illegal char, '_' line: 10, column: 0
+Token #50, with value = x; at line 10, column 6

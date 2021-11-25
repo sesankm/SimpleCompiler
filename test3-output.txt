@@ -1,0 +1,4 @@
+Token #6, with value = class; at line 0, column 0
+Token #50, with value = testEmpty; at line 0, column 6
+Token #14, with value = {; at line 1, column 0
+Token #15, with value = }; at line 3, column 0
